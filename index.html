@@ -1,0 +1,1444 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeCraftHub: Your Learning Management Platform</title>
+    <style>
+      /* ===== Reset & Base ===== */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --primary: #8B5CF6;
+        --primary-light: #a78bfa;
+        --primary-dark: #7c3aed;
+        --primary-bg: #ede9fe;
+        --success: #F59E0B;
+        --success-light: #fbbf24;
+        --success-bg: #fef3c7;
+        --danger: #EF4444;
+        --danger-light: #f87171;
+        --danger-bg: #fee2e2;
+        --neutral-50: #f9fafb;
+        --neutral-100: #f3f4f6;
+        --neutral-200: #e5e7eb;
+        --neutral-300: #d1d5db;
+        --neutral-400: #9ca3af;
+        --neutral-500: #6b7280;
+        --neutral-600: #4b5563;
+        --neutral-700: #374151;
+        --neutral-800: #1f2937;
+        --neutral-900: #111827;
+        --white: #ffffff;
+        --radius-sm: 6px;
+        --radius-md: 10px;
+        --radius-lg: 16px;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+        --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      body {
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        background: var(--neutral-100);
+        color: var(--neutral-800);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* ===== Header ===== */
+      .header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        padding: 2.5rem 1.5rem;
+        text-align: center;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+        position: relative;
+      }
+
+      .header p {
+        font-size: 0.95rem;
+        opacity: 0.85;
+        position: relative;
+      }
+
+      @media (min-width: 640px) {
+        .header {
+          padding: 3rem 2rem;
+        }
+        .header h1 {
+          font-size: 2.2rem;
+        }
+        .header p {
+          font-size: 1.05rem;
+        }
+      }
+
+      /* ===== Container ===== */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .container {
+          padding: 2rem;
+        }
+      }
+
+      /* ===== Toast ===== */
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 400px;
+      }
+
+      .toast {
+        padding: 0.85rem 1.25rem;
+        border-radius: var(--radius-md);
+        color: var(--white);
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: var(--shadow-lg);
+        animation: toastSlide 300ms ease-out;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .toast--success {
+        background: var(--success);
+      }
+
+      .toast--error {
+        background: var(--danger);
+      }
+
+      .toast--info {
+        background: var(--primary);
+      }
+
+      .toast.fade-out {
+        animation: toastFade 300ms ease-in forwards;
+      }
+
+      @keyframes toastSlide {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @keyframes toastFade {
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+
+      /* ===== Form Card ===== */
+      .form-card,
+      .courses-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 640px) {
+        .form-card,
+        .courses-card {
+          padding: 2rem;
+        }
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--neutral-900);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .section-title .icon {
+        color: var(--primary);
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      @media (min-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .form-field--full {
+          grid-column: 1 / -1;
+        }
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+
+      .form-field label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--neutral-700);
+      }
+
+      .form-field label .required {
+        color: var(--danger);
+      }
+
+      .form-field input,
+      .form-field textarea,
+      .form-field select {
+        padding: 0.65rem 0.85rem;
+        border: 2px solid var(--neutral-200);
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        font-family: inherit;
+        color: var(--neutral-800);
+        background: var(--white);
+        transition: border-color var(--transition), box-shadow var(--transition);
+        width: 100%;
+      }
+
+      .form-field input:focus,
+      .form-field textarea:focus,
+      .form-field select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+      }
+
+      .form-field input.error,
+      .form-field textarea.error,
+      .form-field select.error {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+
+      .form-field .field-error {
+        font-size: 0.78rem;
+        color: var(--danger);
+        display: none;
+      }
+
+      .form-field .field-error.visible {
+        display: block;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      /* ===== Buttons ===== */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.65rem 1.5rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 0.9rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all var(--transition);
+        white-space: nowrap;
+      }
+
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .btn--primary {
+        background: var(--primary);
+        color: var(--white);
+      }
+
+      .btn--primary:hover:not(:disabled) {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+      }
+
+      .btn--success {
+        background: var(--success);
+        color: var(--white);
+      }
+
+      .btn--success:hover:not(:disabled) {
+        background: var(--success-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+      }
+
+      .btn--danger {
+        background: var(--danger);
+        color: var(--white);
+      }
+
+      .btn--danger:hover:not(:disabled) {
+        background: var(--danger-light);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+      }
+
+      .btn--ghost {
+        background: var(--neutral-100);
+        color: var(--neutral-600);
+      }
+
+      .btn--ghost:hover:not(:disabled) {
+        background: var(--neutral-200);
+      }
+
+      .btn--sm {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.82rem;
+      }
+
+      .btn--icon {
+        padding: 0.4rem 0.65rem;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .form-actions {
+          grid-column: 1 / -1;
+        }
+      }
+
+      /* ===== Spinner ===== */
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2.5px solid rgba(255, 255, 255, 0.3);
+        border-top-color: var(--white);
+        border-radius: 50%;
+        animation: spin 600ms linear infinite;
+      }
+
+      .spinner--dark {
+        border: 2.5px solid var(--neutral-200);
+        border-top-color: var(--primary);
+      }
+
+      .spinner--large {
+        width: 40px;
+        height: 40px;
+        border-width: 4px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ===== Loading Overlay ===== */
+      .loading-overlay {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 3rem 1rem;
+        color: var(--neutral-500);
+        font-size: 0.9rem;
+      }
+
+      /* ===== Stats Bar ===== */
+      .stats-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+      }
+
+      .stat-chip {
+        background: var(--neutral-50);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-md);
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--neutral-600);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .stat-chip .count {
+        background: var(--primary);
+        color: var(--white);
+        border-radius: 20px;
+        padding: 0.1rem 0.6rem;
+        font-size: 0.78rem;
+      }
+
+      /* ===== Course Cards ===== */
+      .courses-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      @media (min-width: 640px) {
+        .courses-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 960px) {
+        .courses-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .course-card {
+        background: var(--white);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-md);
+        padding: 1.25rem;
+        transition: all var(--transition);
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        animation: cardFadeIn 300ms ease-out;
+      }
+
+      .course-card:hover {
+        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+        border-color: var(--primary-light);
+      }
+
+      @keyframes cardFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .course-card__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .course-card__title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--neutral-900);
+        word-break: break-word;
+      }
+
+      .course-card__description {
+        font-size: 0.88rem;
+        color: var(--neutral-600);
+        line-height: 1.5;
+        flex-grow: 1;
+        word-break: break-word;
+      }
+
+      .course-card__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        color: var(--neutral-500);
+      }
+
+      .meta-item svg {
+        flex-shrink: 0;
+      }
+
+      /* ===== Status Badge ===== */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .status-badge--not-started {
+        background: var(--neutral-100);
+        color: var(--neutral-500);
+        border: 1px solid var(--neutral-300);
+      }
+
+      .status-badge--in-progress {
+        background: var(--primary-bg);
+        color: var(--primary-dark);
+        border: 1px solid var(--primary-light);
+      }
+
+      .status-badge--completed {
+        background: var(--success-bg);
+        color: #92400e;
+        border: 1px solid var(--success);
+      }
+
+      .course-card__actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--neutral-100);
+      }
+
+      /* ===== Empty State ===== */
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--neutral-400);
+      }
+
+      .empty-state svg {
+        margin: 0 auto 1rem;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        font-size: 1.1rem;
+        color: var(--neutral-500);
+        margin-bottom: 0.3rem;
+      }
+
+      .empty-state p {
+        font-size: 0.88rem;
+      }
+
+      /* ===== Modal ===== */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(17, 24, 39, 0.5);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+        padding: 1rem;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+        animation: overlayFade 200ms ease-out;
+      }
+
+      @keyframes overlayFade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 1.75rem;
+        width: 100%;
+        max-width: 540px;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: var(--shadow-lg);
+        animation: modalSlide 300ms ease-out;
+      }
+
+      @media (min-width: 640px) {
+        .modal {
+          padding: 2rem;
+        }
+      }
+
+      @keyframes modalSlide {
+        from {
+          transform: translateY(30px) scale(0.97);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .modal__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--neutral-900);
+      }
+
+      .modal__close {
+        background: var(--neutral-100);
+        border: none;
+        border-radius: var(--radius-sm);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--neutral-500);
+        transition: all var(--transition);
+      }
+
+      .modal__close:hover {
+        background: var(--neutral-200);
+        color: var(--neutral-700);
+      }
+
+      .modal__body {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .modal__footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+      }
+
+      /* ===== Confirm Dialog ===== */
+      .confirm-dialog {
+        text-align: center;
+      }
+
+      .confirm-dialog__icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 1rem;
+        background: var(--danger-bg);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .confirm-dialog__title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--neutral-900);
+        margin-bottom: 0.4rem;
+      }
+
+      .confirm-dialog__text {
+        font-size: 0.9rem;
+        color: var(--neutral-500);
+        margin-bottom: 1.5rem;
+      }
+
+      .confirm-dialog__actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: center;
+      }
+
+      /* ===== Error Banner ===== */
+      .error-banner {
+        background: var(--danger-bg);
+        border: 1px solid var(--danger);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
+        display: none;
+        align-items: center;
+        gap: 0.6rem;
+        color: #991b1b;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      .error-banner.visible {
+        display: flex;
+      }
+
+      .error-banner__close {
+        margin-left: auto;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #991b1b;
+        opacity: 0.6;
+        font-size: 1.1rem;
+      }
+
+      .error-banner__close:hover {
+        opacity: 1;
+      }
+
+      /* ===== Inline Edit ===== */
+      .inline-edit-input,
+      .inline-edit-textarea,
+      .inline-edit-select {
+        width: 100%;
+        padding: 0.45rem 0.6rem;
+        border: 2px solid var(--primary);
+        border-radius: var(--radius-sm);
+        font-size: 0.88rem;
+        font-family: inherit;
+        color: var(--neutral-800);
+        background: var(--white);
+      }
+
+      .inline-edit-input:focus,
+      .inline-edit-textarea:focus,
+      .inline-edit-select:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+      }
+
+      .inline-edit-textarea {
+        resize: vertical;
+        min-height: 60px;
+      }
+    </style>
+    <meta property="og:image" content="https://bolt.new/static/og_default.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png">
+</head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <h1>CodeCraftHub: Your Learning Management Platform</h1>
+      <p>Track, manage, and complete your learning journey</p>
+    </header>
+
+    <div class="container">
+      <!-- Error Banner -->
+      <div class="error-banner" id="errorBanner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span id="errorBannerText">Something went wrong.</span>
+        <button class="error-banner__close" onclick="hideErrorBanner()">&times;</button>
+      </div>
+
+      <!-- Add Course Form -->
+      <section class="form-card">
+        <h2 class="section-title">
+          <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add New Course
+        </h2>
+        <form id="courseForm" novalidate>
+          <div class="form-grid">
+            <div class="form-field form-field--full">
+              <label for="courseName">Course Name <span class="required">*</span></label>
+              <input type="text" id="courseName" name="name" placeholder="e.g. Advanced JavaScript" autocomplete="off" />
+              <span class="field-error" id="error-name">Course name is required</span>
+            </div>
+
+            <div class="form-field form-field--full">
+              <label for="courseDescription">Description <span class="required">*</span></label>
+              <textarea id="courseDescription" name="description" placeholder="Brief description of what the course covers"></textarea>
+              <span class="field-error" id="error-description">Description is required</span>
+            </div>
+
+            <div class="form-field">
+              <label for="courseDate">Target Date <span class="required">*</span></label>
+              <input type="date" id="courseDate" name="target_date" />
+              <span class="field-error" id="error-target_date">Target date is required</span>
+            </div>
+
+            <div class="form-field">
+              <label for="courseStatus">Status <span class="required">*</span></label>
+              <select id="courseStatus" name="status">
+                <option value="">Select status...</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <span class="field-error" id="error-status">Status is required</span>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary" id="submitBtn">
+                <span id="submitText">Add Course</span>
+              </button>
+              <button type="button" class="btn btn--ghost" onclick="resetForm()">
+                Clear
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <!-- Courses List -->
+      <section class="courses-card">
+        <h2 class="section-title">
+          <svg class="icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          Your Courses
+        </h2>
+
+        <div class="stats-bar" id="statsBar"></div>
+
+        <div id="coursesContainer">
+          <div class="loading-overlay">
+            <div class="spinner spinner--dark spinner--large"></div>
+            <p>Loading courses...</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal">
+        <div class="modal__header">
+          <h2 class="modal__title">Edit Course</h2>
+          <button class="modal__close" onclick="closeEditModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <form id="editForm" novalidate>
+          <div class="modal__body">
+            <div class="form-field">
+              <label for="editName">Course Name <span class="required">*</span></label>
+              <input type="text" id="editName" name="name" />
+              <span class="field-error" id="edit-error-name">Course name is required</span>
+            </div>
+            <div class="form-field">
+              <label for="editDescription">Description <span class="required">*</span></label>
+              <textarea id="editDescription" name="description"></textarea>
+              <span class="field-error" id="edit-error-description">Description is required</span>
+            </div>
+            <div class="form-field">
+              <label for="editDate">Target Date <span class="required">*</span></label>
+              <input type="date" id="editDate" name="target_date" />
+              <span class="field-error" id="edit-error-target_date">Target date is required</span>
+            </div>
+            <div class="form-field">
+              <label for="editStatus">Status <span class="required">*</span></label>
+              <select id="editStatus" name="status">
+                <option value="">Select status...</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+              </select>
+              <span class="field-error" id="edit-error-status">Status is required</span>
+            </div>
+          </div>
+          <div class="modal__footer">
+            <button type="button" class="btn btn--ghost" onclick="closeEditModal()">Cancel</button>
+            <button type="submit" class="btn btn--primary" id="editSaveBtn">
+              <span id="editSaveText">Save Changes</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal">
+        <div class="confirm-dialog">
+          <div class="confirm-dialog__icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </div>
+          <h3 class="confirm-dialog__title">Delete Course?</h3>
+          <p class="confirm-dialog__text" id="deleteConfirmText">Are you sure you want to delete this course? This action cannot be undone.</p>
+          <div class="confirm-dialog__actions">
+            <button class="btn btn--ghost" onclick="closeDeleteModal()">Cancel</button>
+            <button class="btn btn--danger" id="deleteConfirmBtn">
+              <span id="deleteConfirmText2">Delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+      // ===== Configuration =====
+      const API_BASE_URL = '/api/courses';
+
+      // ===== State =====
+      let courses = [];
+      let editingCourseId = null;
+      let deletingCourseId = null;
+      let inlineEditingId = null;
+
+      // ===== DOM References =====
+      const courseForm = document.getElementById('courseForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const submitText = document.getElementById('submitText');
+      const coursesContainer = document.getElementById('coursesContainer');
+      const statsBar = document.getElementById('statsBar');
+      const errorBanner = document.getElementById('errorBanner');
+      const errorBannerText = document.getElementById('errorBannerText');
+      const editModal = document.getElementById('editModal');
+      const editForm = document.getElementById('editForm');
+      const editSaveBtn = document.getElementById('editSaveBtn');
+      const editSaveText = document.getElementById('editSaveText');
+      const deleteModal = document.getElementById('deleteModal');
+      const deleteConfirmBtn = document.getElementById('deleteConfirmBtn');
+
+      // ===== API Functions =====
+      async function apiRequest(method, endpoint, body) {
+        const options = {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+        };
+        if (body) {
+          options.body = JSON.stringify(body);
+        }
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+        if (!response.ok) {
+          let errorMessage = `Request failed (${response.status})`;
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch (e) {
+            // Response had no JSON body
+          }
+          throw new Error(errorMessage);
+        }
+        if (response.status === 204) {
+          return null;
+        }
+        return response.json();
+      }
+
+      async function fetchCourses() {
+        showCoursesLoading();
+        try {
+          const data = await apiRequest('GET', '');
+          courses = Array.isArray(data) ? data : (data.courses || []);
+          renderCourses();
+        } catch (err) {
+          showErrorBanner(err.message || 'Failed to load courses. Is the API running?');
+          courses = [];
+          renderCourses();
+        }
+      }
+
+      async function createCourse(courseData) {
+        setButtonLoading(submitBtn, submitText, 'Adding...');
+        try {
+          await apiRequest('POST', '', courseData);
+          showToast('Course added successfully!', 'success');
+          resetForm();
+          await fetchCourses();
+        } catch (err) {
+          showToast(err.message || 'Failed to add course', 'error');
+        } finally {
+          setButtonLoading(submitBtn, submitText, 'Add Course', false);
+        }
+      }
+
+      async function updateCourse(id, courseData) {
+        setButtonLoading(editSaveBtn, editSaveText, 'Saving...');
+        try {
+          await apiRequest('PUT', `/${id}`, courseData);
+          showToast('Course updated successfully!', 'success');
+          closeEditModal();
+          await fetchCourses();
+        } catch (err) {
+          showToast(err.message || 'Failed to update course', 'error');
+        } finally {
+          setButtonLoading(editSaveBtn, editSaveText, 'Save Changes', false);
+        }
+      }
+
+      async function deleteCourse(id) {
+        setButtonLoading(deleteConfirmBtn, document.getElementById('deleteConfirmText2'), 'Deleting...');
+        try {
+          await apiRequest('DELETE', `/${id}`);
+          showToast('Course deleted successfully!', 'success');
+          closeDeleteModal();
+          await fetchCourses();
+        } catch (err) {
+          showToast(err.message || 'Failed to delete course', 'error');
+        } finally {
+          setButtonLoading(deleteConfirmBtn, document.getElementById('deleteConfirmText2'), 'Delete', false);
+        }
+      }
+
+      // ===== Validation =====
+      function validateForm(form, prefix) {
+        const p = prefix || '';
+        let isValid = true;
+        const fields = ['name', 'description', 'target_date', 'status'];
+        fields.forEach(field => {
+          const input = form.querySelector(`[name="${field}"]`);
+          const errorEl = document.getElementById(`${p}error-${field}`);
+          if (!input.value.trim()) {
+            input.classList.add('error');
+            if (errorEl) errorEl.classList.add('visible');
+            isValid = false;
+          } else {
+            input.classList.remove('error');
+            if (errorEl) errorEl.classList.remove('visible');
+          }
+        });
+        return isValid;
+      }
+
+      function clearFieldError(input, errorId) {
+        input.classList.remove('error');
+        const errorEl = document.getElementById(errorId);
+        if (errorEl) errorEl.classList.remove('visible');
+      }
+
+      // ===== Form Handlers =====
+      courseForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateForm(this, '')) {
+          showToast('Please fill in all required fields', 'error');
+          return;
+        }
+        const formData = new FormData(this);
+        const courseData = {
+          name: formData.get('name').trim(),
+          description: formData.get('description').trim(),
+          target_date: formData.get('target_date'),
+          status: formData.get('status'),
+        };
+        createCourse(courseData);
+      });
+
+      // Clear field errors on input
+      ['courseName', 'courseDescription', 'courseDate', 'courseStatus'].forEach(id => {
+        const el = document.getElementById(id);
+        const fieldName = el.getAttribute('name');
+        el.addEventListener('input', () => clearFieldError(el, `error-${fieldName}`));
+        el.addEventListener('change', () => clearFieldError(el, `error-${fieldName}`));
+      });
+
+      editForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!validateForm(this, 'edit-')) {
+          showToast('Please fill in all required fields', 'error');
+          return;
+        }
+        const formData = new FormData(this);
+        const courseData = {
+          name: formData.get('name').trim(),
+          description: formData.get('description').trim(),
+          target_date: formData.get('target_date'),
+          status: formData.get('status'),
+        };
+        updateCourse(editingCourseId, courseData);
+      });
+
+      // Clear edit field errors on input
+      ['editName', 'editDescription', 'editDate', 'editStatus'].forEach(id => {
+        const el = document.getElementById(id);
+        const fieldName = el.getAttribute('name');
+        el.addEventListener('input', () => clearFieldError(el, `edit-error-${fieldName}`));
+        el.addEventListener('change', () => clearFieldError(el, `edit-error-${fieldName}`));
+      });
+
+      function resetForm() {
+        courseForm.reset();
+        ['name', 'description', 'target_date', 'status'].forEach(field => {
+          const input = courseForm.querySelector(`[name="${field}"]`);
+          input.classList.remove('error');
+          const errorEl = document.getElementById(`error-${field}`);
+          if (errorEl) errorEl.classList.remove('visible');
+        });
+      }
+
+      // ===== Modal Handlers =====
+      function openEditModal(course) {
+        editingCourseId = course.id;
+        document.getElementById('editName').value = course.name || '';
+        document.getElementById('editDescription').value = course.description || '';
+        document.getElementById('editDate').value = formatDateInput(course.target_date);
+        document.getElementById('editStatus').value = course.status || '';
+        // Clear any errors
+        ['name', 'description', 'target_date', 'status'].forEach(field => {
+          const input = editForm.querySelector(`[name="${field}"]`);
+          input.classList.remove('error');
+          const errorEl = document.getElementById(`edit-error-${field}`);
+          if (errorEl) errorEl.classList.remove('visible');
+        });
+        editModal.classList.add('active');
+      }
+
+      function closeEditModal() {
+        editModal.classList.remove('active');
+        editingCourseId = null;
+      }
+
+      function openDeleteModal(course) {
+        deletingCourseId = course.id;
+        document.getElementById('deleteConfirmText').textContent =
+          `Are you sure you want to delete "${course.name}"? This action cannot be undone.`;
+        deleteModal.classList.add('active');
+      }
+
+      function closeDeleteModal() {
+        deleteModal.classList.remove('active');
+        deletingCourseId = null;
+      }
+
+      deleteConfirmBtn.addEventListener('click', function () {
+        if (deletingCourseId !== null) {
+          deleteCourse(deletingCourseId);
+        }
+      });
+
+      // Close modal on overlay click
+      editModal.addEventListener('click', function (e) {
+        if (e.target === this) closeEditModal();
+      });
+      deleteModal.addEventListener('click', function (e) {
+        if (e.target === this) closeDeleteModal();
+      });
+
+      // Close modal on Escape
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+          closeEditModal();
+          closeDeleteModal();
+        }
+      });
+
+      // ===== Inline Edit =====
+      function startInlineEdit(courseId) {
+        inlineEditingId = courseId;
+        renderCourses();
+      }
+
+      function cancelInlineEdit() {
+        inlineEditingId = null;
+        renderCourses();
+      }
+
+      function saveInlineEdit(courseId) {
+        const card = document.querySelector(`[data-course-id="${courseId}"]`);
+        if (!card) return;
+
+        const name = card.querySelector('.inline-edit-name').value.trim();
+        const description = card.querySelector('.inline-edit-description').value.trim();
+        const target_date = card.querySelector('.inline-edit-date').value;
+        const status = card.querySelector('.inline-edit-status').value;
+
+        if (!name || !description || !target_date || !status) {
+          showToast('All fields are required for inline edit', 'error');
+          return;
+        }
+
+        updateCourse(courseId, { name, description, target_date, status });
+        inlineEditingId = null;
+      }
+
+      // ===== Rendering =====
+      function showCoursesLoading() {
+        coursesContainer.innerHTML = `
+          <div class="loading-overlay">
+            <div class="spinner spinner--dark spinner--large"></div>
+            <p>Loading courses...</p>
+          </div>
+        `;
+      }
+
+      function renderCourses() {
+        // Render stats
+        renderStats();
+
+        if (courses.length === 0) {
+          coursesContainer.innerHTML = `
+            <div class="empty-state">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <h3>No courses yet</h3>
+              <p>Add your first course using the form above to get started.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'courses-grid';
+
+        courses.forEach(course => {
+          if (inlineEditingId === course.id) {
+            grid.appendChild(renderInlineEditCard(course));
+          } else {
+            grid.appendChild(renderCourseCard(course));
+          }
+        });
+
+        coursesContainer.innerHTML = '';
+        coursesContainer.appendChild(grid);
+      }
+
+      function renderStats() {
+        const total = courses.length;
+        const notStarted = courses.filter(c => c.status === 'Not Started').length;
+        const inProgress = courses.filter(c => c.status === 'In Progress').length;
+        const completed = courses.filter(c => c.status === 'Completed').length;
+
+        statsBar.innerHTML = `
+          <div class="stat-chip">Total <span class="count">${total}</span></div>
+          <div class="stat-chip">Not Started <span class="count" style="background:#9ca3af">${notStarted}</span></div>
+          <div class="stat-chip">In Progress <span class="count">${inProgress}</span></div>
+          <div class="stat-chip">Completed <span class="count" style="background:#F59E0B">${completed}</span></div>
+        `;
+      }
+
+      function renderCourseCard(course) {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.setAttribute('data-course-id', course.id);
+
+        const statusClass = getStatusClass(course.status);
+        const formattedDate = formatDateDisplay(course.target_date);
+        const createdDate = formatDateDisplay(course.created_at);
+
+        card.innerHTML = `
+          <div class="course-card__header">
+            <h3 class="course-card__title">${escapeHtml(course.name)}</h3>
+            <span class="status-badge ${statusClass}">${escapeHtml(course.status || 'Not Started')}</span>
+          </div>
+          <p class="course-card__description">${escapeHtml(course.description)}</p>
+          <div class="course-card__meta">
+            <span class="meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              ${formattedDate}
+            </span>
+          </div>
+          ${createdDate ? `<div class="course-card__meta"><span class="meta-item" style="font-size:0.75rem;opacity:0.7">Created: ${createdDate}</span></div>` : ''}
+          <div class="course-card__actions">
+            <button class="btn btn--primary btn--sm" onclick="openEditModal(${JSON.stringify(course).replace(/"/g, '&quot;')})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+              Edit
+            </button>
+            <button class="btn btn--ghost btn--sm" onclick="startInlineEdit(${course.id})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+              Quick Edit
+            </button>
+            <button class="btn btn--danger btn--sm" onclick="openDeleteModal(${JSON.stringify(course).replace(/"/g, '&quot;')})" style="margin-left:auto">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              Remove
+            </button>
+          </div>
+        `;
+        return card;
+      }
+
+      function renderInlineEditCard(course) {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        card.setAttribute('data-course-id', course.id);
+        card.style.borderColor = 'var(--primary)';
+        card.style.borderWidth = '2px';
+
+        card.innerHTML = `
+          <div class="course-card__header">
+            <input type="text" class="inline-edit-name inline-edit-input" value="${escapeHtml(course.name)}" placeholder="Course name" />
+          </div>
+          <textarea class="inline-edit-description inline-edit-textarea" placeholder="Description">${escapeHtml(course.description)}</textarea>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+            <input type="date" class="inline-edit-date inline-edit-input" value="${formatDateInput(course.target_date)}" style="flex:1;min-width:120px" />
+            <select class="inline-edit-status inline-edit-select" style="flex:1;min-width:120px">
+              <option value="Not Started" ${course.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+              <option value="In Progress" ${course.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+              <option value="Completed" ${course.status === 'Completed' ? 'selected' : ''}>Completed</option>
+            </select>
+          </div>
+          <div class="course-card__actions">
+            <button class="btn btn--success btn--sm" onclick="saveInlineEdit(${course.id})">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Save
+            </button>
+            <button class="btn btn--ghost btn--sm" onclick="cancelInlineEdit()">Cancel</button>
+          </div>
+        `;
+        return card;
+      }
+
+      // ===== Utilities =====
+      function getStatusClass(status) {
+        const map = {
+          'Not Started': 'status-badge--not-started',
+          'In Progress': 'status-badge--in-progress',
+          'Completed': 'status-badge--completed',
+        };
+        return map[status] || 'status-badge--not-started';
+      }
+
+      function formatDateInput(dateStr) {
+        if (!dateStr) return '';
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return '';
+        return d.toISOString().split('T')[0];
+      }
+
+      function formatDateDisplay(dateStr) {
+        if (!dateStr) return '—';
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return escapeHtml(String(dateStr));
+        return d.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        });
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      function setButtonLoading(btn, textEl, loadingText, isLoading = true) {
+        if (isLoading) {
+          btn.disabled = true;
+          textEl.innerHTML = `<span class="spinner"></span> ${loadingText}`;
+        } else {
+          btn.disabled = false;
+          textEl.textContent = loadingText.replace('...', '');
+        }
+      }
+
+      function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast toast--${type}`;
+        toast.textContent = message;
+        document.getElementById('toastContainer').appendChild(toast);
+        setTimeout(() => {
+          toast.classList.add('fade-out');
+          setTimeout(() => toast.remove(), 300);
+        }, 3500);
+      }
+
+      function showErrorBanner(message) {
+        errorBannerText.textContent = message;
+        errorBanner.classList.add('visible');
+      }
+
+      function hideErrorBanner() {
+        errorBanner.classList.remove('visible');
+      }
+
+      // ===== Init =====
+      fetchCourses();
+    </script>
+  </body>
+</html>

@@ -24,12 +24,9 @@ const ALLOWED_STATUSES = [
 // Enable Express to read JSON request bodies
 app.use(express.json());
 
-// Opening the base URL in a browser shows where to find the course list.
+// Serve the dashboard from the same origin as the API.
 app.get("/", (req, res) => {
-  res.json({
-    message: "Welcome to CodeCraftHub API",
-    courses: "/api/courses"
-  });
+  res.sendFile(path.join(__dirname, "..", "index.html"));
 });
 
 /*

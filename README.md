@@ -1,6 +1,6 @@
 # CodeCraftHub
 
-API REST per tenere traccia dei corsi da studiare, realizzata con Node.js ed Express. Non richiede database o autenticazione. Questa versione restituisce JSON: non include un'interfaccia grafica.
+Dashboard e API REST per tenere traccia dei corsi da studiare, realizzate con HTML, Node.js ed Express. Non richiedono database o autenticazione.
 
 ## Installazione e avvio
 
@@ -11,12 +11,13 @@ npm install
 npm start
 ```
 
-Il server ascolta su `http://localhost:5000`. Apri `http://localhost:5000/api/courses` nel browser per vedere i corsi.
+Il server ascolta su `http://localhost:5000`. Apri questo indirizzo nel browser per usare la dashboard. Gli endpoint JSON sono disponibili su `http://localhost:5000/api/courses`.
 
 ## Struttura e salvataggio
 
 ```text
 codecrafthub/
+├── index.html
 ├── src/
 │   ├── app.js
 │   └── courses.json
